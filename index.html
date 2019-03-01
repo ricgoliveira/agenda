@@ -1,0 +1,207 @@
+<!doctype html>
+<html ng-app>
+  <head>
+  
+        <meta charset="iso-8859-1">     
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <style>
+            .container{
+                width:80%;
+                margin:0 auto;
+                border:1px solid black;
+            }
+            .obj_hide{
+                display:none;
+            }
+            .tab1{
+                 display:inline-block;
+                 width:225px;
+            }
+            .search{
+                margin: 20px 0;
+            }
+        </style>      
+        <!-- <script src="https://code.angularjs.org/1.0.1/angular-1.0.1.min.js"></script>        -->
+        <script src="js/angular.js"></script>     
+        <script src="js/script.js"></script>     
+        <script src="js/mask.js"></script>     
+    </head>
+    <body>
+      <!-- <div style='padding: 3%'>
+        <input type="text" ng-model="meuNome" placeholder="Digite um nome aqui..." style='margin-bottom: 20px'>
+        <h1>Olá, {{ meuNome }}!</h1>
+      </div> -->
+      <div ng-controller="ListaContatosController">
+        <div class="container">
+            <h2 class="text-center">Cadastro de Contatos</h2>
+            <form name="formContato">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput">Nome</label>
+                            <input type="text" class="form-control"  ng-model="contato.nome" placeholder="Nome">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Data de Nascimento</label>
+                            <input type="text" class="form-control data" onkeypress="mascaraData( this, event )" maxlength="10" ng-model="contato.dataNascimento" placeholder="Data de Nascimento">                            
+                        </div>
+                    </div>                                                        
+                </div>      
+                <div class="row">
+                    <div class="col-7">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Rua</label>
+                            <input type="text" class="form-control"  ng-model="contato.endereco.rua" placeholder="Rua">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Número</label>
+                            <input type="text" class="form-control" onKeyUp="somente_numero(this)" ng-model="contato.endereco.numero" placeholder="Número">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Complemento</label>
+                            <input type="text" class="form-control" ng-model="contato.endereco.complemento" placeholder="Complemento">
+                        </div>
+                    </div>
+                </div>  
+                <div class="row">
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">CEP</label>
+                            <input type="text" onkeypress="mascaraGeral(this,'#####-###')" class="form-control"  maxlength="9" ng-model="contato.endereco.CEP" placeholder="CEP">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Bairro</label>
+                            <input type="text" class="form-control"  ng-model="contato.endereco.bairro" placeholder="Bairro">
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Cidade</label>
+                            <input type="text" class="form-control" ng-model="contato.endereco.cidade" placeholder="Cidade">
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">UF</label>
+                            <input type="text" class="form-control"  maxlength="2" ng-model="contato.endereco.UF" placeholder="UF">
+                        </div>
+                    </div>
+                </div>   
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <div class="form-row">      
+                                <div class="form-row">
+                                    <div class=" tab1 col-5">
+                                        <label for="formGroupExampleInput2">Telefone</label>                                                   
+                                    </div>                                   
+                                </div>
+                            </div>
+                            <div class="form-row"  ng-hide="contatoNovo"  ng-repeat="telefone in contato.telefones" ng-init="sectionIndex = $index">                                                                                                
+                                <div class="form-row" ng-show="telefone.ativo">                                    
+                                    <div class="col-5">             
+                                        <input type="text" onkeyup="mascara( this, mtel );" class="form-control" ng-click="obj_hide=false" maxlength="15"  ng-model="contato.telefones[$index].numero" placeholder="Telefone">                                    
+                                    </div>
+                                    <div class="col-5">                                                                       
+                                        <select class="form-control"  ng-model="contato.telefones[sectionIndex].tipoTelefone" id="tipoTelefone">                                        
+                                            <!-- <option ng-selected="contato.telefones[sectionIndex].tipoTelefone.nome == tipo.nome" ng-repeat="tipo in tiposTelefone" >{{tipo.nome}}</option>    -->
+                                            <option ng-selected="contato.telefones[sectionIndex].tipoTelefone == 'Comercial'" value="Comercial">Comercial</option>                                                               
+                                            <option ng-selected="contato.telefones[sectionIndex].tipoTelefone == 'Residencial'" value="Residencial">Residencial</option>                                                               
+                                            <option ng-selected="contato.telefones[sectionIndex].tipoTelefone == 'Celular'" value="Celular">Celular</option>                                                                          
+                                        </select>                                   
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" ng-click="adicionarTelefone()" class="btn btn-dark">+</button>
+                                    </div>        
+                                </div>                        
+                            </div> 
+                            <!--- Novo telefone -->                          
+                            <div class="form-row" ng-show="contatoNovo">       
+                                <div class="form-row">                                                                   
+                                    <div class="col-5">
+                                        <input type="text" onkeyup="mascara( this, mtel );" class="form-control" ng-click="obj_hide=false" maxlength="15"  ng-model="telefone.numero" placeholder="Telefone">                                    
+                                    </div>
+                                    <div class="col-5">                                                    
+                                        <select class="form-control" ng-model="telefone.tipoTelefone">
+                                            <option value="">Selecione</option>
+                                            <option value="Comercial">Comercial</option>                                                               
+                                            <option value="Residencial">Residencial</option>                                                               
+                                            <option value="Celular">Celular</option>                                                               
+                                        </select>                                   
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" ng-click="adicionarTelefone()" class="btn btn-dark">+</button>
+                                    </div>     
+                                </div>                           
+                            </div>                  
+                        </div>
+                    </div>
+                </div>  
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <!-- <button ng-click="adicionarContato()" class="btn btn-primary">Incluir Contato</button> -->
+                            <button class="btn btn-success" ng-click="gravarContato()">Gravar Contato</button>
+                        </div>
+                    </div>
+                </div>                                             
+            </form>
+        </div>
+        <div class="container">
+            <div class="row search">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="search" placeholder="Por nome...">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" ng-click="buscar()" type="button">Buscar</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div>
+            <h2>Contatos</h2>
+            <div ng-repeat="contato in contatos | filter: search    ">
+                <table class="table table-sm"  ng-show="contato.ativo">               
+                    <tr>
+                        <td><b>Nome</b></td><td>{{ contato.nome }}</td>
+                    <tr>
+                    </tr>
+                        <td><b>Data de Nascimento</b></td> <td>{{ contato.dataNascimento | date: 'dd/MM/yyyy' }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Endereço</b></td><td>{{ contato.endereco.rua }}, {{ contato.endereco.numero }} - {{ contato.endereco.complemento}}
+                        {{ contato.endereco.bairro}} - Cep: {{contato.endereco.CEP}} - {{contato.endereco.cidade}}/{{contato.endereco.UF}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Telefones</b></td>
+                        <td>
+                           <span class="tab1"><b>Número</b></span><b>Tipo de Telefone</b>
+                           <div  ng-repeat="telefone in contato.telefones">
+                               <p ng-show="telefone.ativo">
+                                    <span class="tab1">
+                                        {{ telefone.numero }}
+                                    </span>
+                                    {{ telefone.tipoTelefone }}
+                               </p>          
+                           </div>                                                          
+                        </td>
+                    </tr>    
+                    <tr>
+                        <td colspan="2">
+                            <button class="btn btn-warning" ng-click="selecionar($index)">Editar</button>
+                            <button class="btn btn-danger" ng-click="excluir($index)">Excluir</button></td>
+                        </td>
+                    </tr>  
+                </table>
+            </div>
+        </div>
+        </div>
+    </body>
+</html>
